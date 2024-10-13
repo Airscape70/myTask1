@@ -13,16 +13,14 @@ import { useReport } from "../../hooks/useReport";
 import { useEventReports } from "../../hooks/useEventReports";
 
 export default function Home() {
-  const { status, data: projects } = useQuery("projects", getProjects);
+  const {status, data: projects } = useQuery("projects", getProjects);
   const [selectedProject, setSelectedProject] = useState<IProject | undefined>();
   const [selectedWell, setSelecetedWell] = useState<IWell | undefined>();
-  const [selectedFilter, setSelecetedFilter] = useState<string | undefined>();
-
+  // const [selectedFilter, setSelecetedFilter] = useState<string | undefined>();
 
   const sites = useSites(selectedProject);
   const wells = useWells(sites);
   const report = useReport(selectedWell);
-
 
   useEffect(() => {
     projects && setSelectedProject(projects![0]);
@@ -40,7 +38,7 @@ export default function Home() {
     return <h2>ERRROR</h2>;
   }
 
-  const onSelectClick = (project: IProject) => {
+  const onProjectClick = (project: IProject) => {
     setSelectedProject(project);
   };
 
@@ -48,14 +46,12 @@ export default function Home() {
     setSelecetedWell(well);
   };
   const handleFilterReport = (filters: string) => {
-    setSelecetedFilter(filters)
-  }
-
-
+    // setSelecetedFilter(filters);
+  };
 
   return (
     <>
-      <Header data={projects} onSelectClick={onSelectClick} />
+      <Header data={projects} onProjectClick={onProjectClick} />
 
       {selectedProject && (
         <Box mx="50px">
@@ -65,7 +61,7 @@ export default function Home() {
             onWellClick={onWellClick}
             handleFilterReport={handleFilterReport}
           />
-          <Report report={report}/>
+          <Report report={report} />
         </Box>
       )}
     </>

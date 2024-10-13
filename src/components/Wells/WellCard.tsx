@@ -5,6 +5,7 @@ import WellCardActions from "./WellCardActions";
 import { IWell } from "../../interfaces/IWell";
 import { IEvent } from "../../interfaces/IEvent";
 import { useEvents } from "../../hooks/useEvents";
+import { Box } from "@mui/material";
 
 interface IWellCardProps {
   well: IWell;
@@ -23,9 +24,15 @@ export default function WellCard(props: IWellCardProps) {
         display: "inline-block",
         flexFlow: "row wrap",
         mr: 5,
+        mt: 1,
+        "&:hover": {
+          cursor: "pointer",
+          boxShadow: "0px 5px 10px rgb(100, 100, 100);"
+        },
       }}
+      onClick={() => onWellClick(well)}
     >
-      <div onClick={() => onWellClick(well)}>
+      <Box>
         <CardContent sx={{ pb: "0" }}>
           <Typography
             gutterBottom
@@ -41,9 +48,12 @@ export default function WellCard(props: IWellCardProps) {
             Дата забуревания: {well.spudDate}
           </Typography>
         </CardContent>
-      </div>
+      </Box>
 
-      <WellCardActions events = {events} handleFilterReport={handleFilterReport}/>
+      <WellCardActions
+        events={events}
+        handleFilterReport={handleFilterReport}
+      />
     </Card>
   );
 }

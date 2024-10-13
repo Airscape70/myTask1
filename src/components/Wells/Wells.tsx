@@ -8,30 +8,29 @@ import { IProject } from "../../interfaces/IProject";
 import { IWell } from "../../interfaces/IWell";
 import Carousel from "./Carousel";
 
- interface IWellsProps {
-  project: IProject
-  wells: IWell[]
+interface IWellsProps {
+  project: IProject;
+  wells: IWell[];
   onWellClick: (wellid: IWell) => void;
   handleFilterReport: (filters: string) => void;
 }
 
 export default function Wells(props: IWellsProps) {
-
   return (
     <>
-      <Grid container>
+      <Grid container mb={5}>
         <Grid size={10}>
           <Typography variant="h6" my="10px">
             {props.project.projectName}
           </Typography>
 
-          <Box sx={{ overflowX: "auto", whiteSpace: "nowrap" }}>
+          <Box sx={{ overflowX: "auto", whiteSpace: "nowrap" }} pb={5}>
             {props.wells.map((el) => (
               <WellCard
                 key={el.wellId}
                 onWellClick={props.onWellClick}
                 handleFilterReport={props.handleFilterReport}
-                well = {el}
+                well={el}
               />
             ))}
           </Box>

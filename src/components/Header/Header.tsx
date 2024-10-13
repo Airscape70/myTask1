@@ -11,7 +11,7 @@ const navItems:string[] = ["Home", "About", "Contact"];
 
 interface IHeaderProps {
   data: IProject[];
-  onSelectClick: (event: IProject) => void;
+  onProjectClick: (event: IProject) => void;
 };
 
 export default function Header(props: IHeaderProps) {
@@ -20,7 +20,7 @@ export default function Header(props: IHeaderProps) {
       <Toolbar>
         <BasicMenu
           data={props.data}
-          onSelectClick={props.onSelectClick}
+          onProjectClick={props.onProjectClick}
         />
 
         <Box sx={{ xs: "none", sm: "block" }}>
