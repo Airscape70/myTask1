@@ -8,7 +8,7 @@ import { Box } from "@mui/material";
 
 type BasicMenuProps = {
   data: IProject[];
-  handleSelectClick: (event: IProject) => void;
+  onSelectClick: (event: IProject) => void;
 };
 
 export default function BasicMenu(props: BasicMenuProps) {
@@ -25,7 +25,7 @@ export default function BasicMenu(props: BasicMenuProps) {
               {props.data.map((el: IProject) => (
                 <MenuItem
                   key={el.projectId}
-                  onClick={() => props.handleSelectClick(el)}
+                  onClick={() => props.onSelectClick(el)}
                 >
                   {el.projectName}
                 </MenuItem>

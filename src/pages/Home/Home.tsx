@@ -4,85 +4,32 @@ import Report from "../../components/Report/Report";
 import Wells from "../../components/Wells/Wells";
 import { useQuery } from "react-query";
 import { IProject } from "../../interfaces/IProject";
-import { getFields, getReport, getSites, getWells } from "../../api/api";
+import { getProjects } from "../../api/api";
 import { useEffect, useState } from "react";
-import { IWells } from "../../interfaces/IWells";
-import { ISites } from "../../interfaces/ISites";
-import { IReport } from "../../interfaces/IReport";
-
-// export function useFields() {
-//   const { status, data: fields } = useQuery("fields", getFields);
-
-//   return fields;
-// }
-
-export function useSites(project?: IProject) {
-  const { data: sitesData = [], refetch: fetchSitesData } = useQuery<ISites[]>(
-    ["sites", project?.projectId],
-    async () => project && getSites(project.projectId),
-    {
-      enabled: false,
-    }
-  );
-
-  useEffect(() => {
-    if (!project?.projectId) return;
-    fetchSitesData();
-  }, [project?.projectId, fetchSitesData]);
-
-  return sitesData;
-}
-
-export function useWells(sites: ISites[]) {
-  const { data: wellsData = [], refetch: fetchWellsData } = useQuery<IWells[]>(
-    ["wells", sites],
-    () => {
-      const siteIds: string = sites.map((el) => el.siteId).join(",");
-      return getWells(siteIds);
-    },
-    {
-      enabled: false,
-    }
-  );
-
-  useEffect(() => {
-    if (sites.length === 0) return;
-    fetchWellsData();
-  }, [sites, fetchWellsData]);
-
-  return wellsData;
-}
-
-export function useReport(well?: IWells) {
-  const { data: reportData = [], refetch: fetchReportData } = useQuery<
-    IReport[]
-  >(["reportId", well?.wellId], async () => well && getReport(well.wellId), {
-    enabled: false,
-  });
-
-  useEffect(() => {
-    if (!well) return;
-    fetchReportData();
-  }, [well, fetchReportData]);
-
-  return reportData;
-}
+import { IWell } from "../../interfaces/IWell";
+import { useSites } from "../../hooks/useSites";
+import { useWells } from "../../hooks/useWells";
+import { useReport } from "../../hooks/useReport";
+import { useEventReports } from "../../hooks/useEventReports";
 
 export default function Home() {
-  const { status, data: fields } = useQuery("fields", getFields);
-  const [selectProject, setSelectProject] = useState<IProject | undefined>();
-  const [selectWell, setSelecetWell] = useState<IWells | undefined>();
+  const { status, data: projects } = useQuery("projects", getProjects);
+  const [selectedProject, setSelectedProject] = useState<IProject | undefined>();
+  const [selectedWell, setSelecetedWell] = useState<IWell | undefined>();
+  const [selectedFilter, setSelecetedFilter] = useState<string | undefined>();
 
-  const sites = useSites(selectProject);
+
+  const sites = useSites(selectedProject);
   const wells = useWells(sites);
-  const report = useReport(selectWell);
+  const report = useReport(selectedWell);
+
 
   useEffect(() => {
-    fields && setSelectProject(fields![0]);
-  }, [fields]);
+    projects && setSelectedProject(projects![0]);
+  }, [projects]);
 
   useEffect(() => {
-    wells.length > 0 && setSelecetWell(wells[0]);
+    wells.length > 0 && setSelecetedWell(wells[0]);
   }, [wells]);
 
   if (status === "loading") {
@@ -93,26 +40,32 @@ export default function Home() {
     return <h2>ERRROR</h2>;
   }
 
-  const handleSelectClick = (selected: IProject) => {
-    setSelectProject(selected);
+  const onSelectClick = (project: IProject) => {
+    setSelectedProject(project);
   };
 
-  const handleWellClick = (selected: IWells) => {
-    setSelecetWell(selected);
+  const onWellClick = (well: IWell) => {
+    setSelecetedWell(well);
   };
+  const handleFilterReport = (filters: string) => {
+    setSelecetedFilter(filters)
+  }
+
+
 
   return (
     <>
-      <Header data={fields} handleSelectClick={handleSelectClick} />
+      <Header data={projects} onSelectClick={onSelectClick} />
 
-      {selectProject && (
+      {selectedProject && (
         <Box mx="50px">
           <Wells
-            project={selectProject}
+            project={selectedProject}
             wells={wells}
-            handleWellClick={handleWellClick}
+            onWellClick={onWellClick}
+            handleFilterReport={handleFilterReport}
           />
-          <Report report={report} />
+          <Report report={report}/>
         </Box>
       )}
     </>

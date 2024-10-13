@@ -1,70 +1,26 @@
-import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import InputBase from "@mui/material/InputBase";
 import Button from "@mui/material/Button";
 import SearchIcon from "@mui/icons-material/Search";
-
 import { IProject } from "../../interfaces/IProject";
 import BasicMenu from "./BasicMenu";
+import { Search, SearchIconWrapper, StyledInputBase } from "./muiComponentsStyled/componentStyled";
 
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(1),
-    width: "auto",
-  },
-}));
+const navItems:string[] = ["Home", "About", "Contact"];
 
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  width: "100%",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    [theme.breakpoints.up("sm")]: {
-      width: "12ch",
-      "&:focus": {
-        width: "20ch",
-      },
-    },
-  },
-}));
-
-const navItems = ["Home", "About", "Contact"];
-
-type HeaderProps = {
+interface IHeaderProps {
   data: IProject[];
-  handleSelectClick: (event: IProject) => void;
+  onSelectClick: (event: IProject) => void;
 };
 
-export default function Header(props: HeaderProps) {
+export default function Header(props: IHeaderProps) {
   return (
     <AppBar position="static">
       <Toolbar>
         <BasicMenu
           data={props.data}
-          handleSelectClick={props.handleSelectClick}
+          onSelectClick={props.onSelectClick}
         />
 
         <Box sx={{ xs: "none", sm: "block" }}>

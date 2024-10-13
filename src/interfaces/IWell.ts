@@ -1,4 +1,4 @@
-export interface IWells {
+export interface IWell {
   wellId: string;
   siteId: string;
   spudDate: string;

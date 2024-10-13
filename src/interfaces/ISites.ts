@@ -1,4 +1,4 @@
-export interface ISites {
+export interface ISite {
   siteId: string;
   projectId: string;
   siteName: string;
