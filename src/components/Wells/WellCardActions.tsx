@@ -2,35 +2,35 @@ import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import { IEvent } from "../../interfaces/IEvent";
+import { Box, ToggleButton } from "@mui/material";
+import { useState } from "react";
 
 interface IWellCardActions {
   events: IEvent[];
-  handleFilterReport: (filters: string) => void;
+  handleFilterReport: (filter: string) => void;
 }
-
 export default function WellCardActions(props: IWellCardActions) {
   const { events, handleFilterReport } = props;
+  const [selected, setSelected] = useState(false);
+  const buttons = ["БУР", "ВМР", "ОСВ"];
+
   return (
-    <>
+    <Box sx={{ justifyContent: "flex-end" }}>
       <CardActions
         sx={{
-          alignItems: "flex-end",
+          height: "60px",
           pl: "16px",
         }}
       >
-        <Stack direction="row" spacing={2}>
-          {events.map((el) => (
-            <Button
-              key={el.eventId}
-              sx={{ borderRadius: "50px" }}
-              size="medium"
-              variant="outlined"
-              onClick={() => handleFilterReport(el.eventId)}
-            >
-              {el.eventCode}
-            </Button>
-          ))}
-        </Stack>
+        {buttons.map((btn) => (
+          <ToggleButton
+            value="check"
+            selected={selected}
+            onChange={() => setSelected((prevSelected) => !prevSelected)}
+          >
+            {btn}
+          </ToggleButton>
+        ))}
       </CardActions>
 
       <CardActions>
@@ -43,6 +43,6 @@ export default function WellCardActions(props: IWellCardActions) {
           </Button>
         </Stack>
       </CardActions>
-    </>
+    </Box>
   );
 }

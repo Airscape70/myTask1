@@ -50,7 +50,7 @@ export async function getReport(wellId: string) {
 }
 
 
-export async function getFilteredReports(eventIds: string) {
+export async function getFilteredReports(eventIds?: string) {
   const { data } = await instance.get(`DmReportJournal/wellId/636Znb6AdT/eventId/${eventIds}`, {
     params: {
       fields:
