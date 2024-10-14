@@ -3,9 +3,9 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import WellCardActions from "./WellCardActions";
 import { IWell } from "../../interfaces/IWell";
-import { IEvent } from "../../interfaces/IEvent";
 import { useEvents } from "../../hooks/useEvents";
 import { Box } from "@mui/material";
+import { useLocation } from "react-router-dom";
 
 interface IWellCardProps {
   well: IWell;
@@ -23,7 +23,7 @@ export default function WellCard(props: IWellCardProps) {
         height: 250,
         display: "inline-block",
         flexFlow: "row wrap",
-        mr: 5,
+        mx: 2,
         mt: 1,
         "&:hover": {
           cursor: "pointer",

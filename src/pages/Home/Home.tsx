@@ -10,14 +10,16 @@ import { IWell } from "../../interfaces/IWell";
 import { useSites } from "../../hooks/useSites";
 import { useWells } from "../../hooks/useWells";
 import { useReport } from "../../hooks/useReport";
-import { useEventReports } from "../../hooks/useEventReports";
+import { Route, Routes, useNavigate, useParams } from "react-router-dom";
 
 export default function Home() {
-  const {status, data: projects } = useQuery("projects", getProjects);
-  const [selectedProject, setSelectedProject] = useState<IProject | undefined>();
+  const { status, data: projects } = useQuery("projects", getProjects);
+  const [selectedProject, setSelectedProject] = useState<
+    IProject | undefined
+  >();
   const [selectedWell, setSelecetedWell] = useState<IWell | undefined>();
   // const [selectedFilter, setSelecetedFilter] = useState<string | undefined>();
-
+  const navigate = useNavigate();
   const sites = useSites(selectedProject);
   const wells = useWells(sites);
   const report = useReport(selectedWell);
@@ -27,8 +29,11 @@ export default function Home() {
   }, [projects]);
 
   useEffect(() => {
-    wells.length > 0 && setSelecetedWell(wells[0]);
-  }, [wells]);
+    if (wells.length > 0) {
+      setSelecetedWell(wells[0]);
+      navigate(`/${selectedWell!.wellId}`);
+    } 
+  }, [wells, selectedWell, navigate]);
 
   if (status === "loading") {
     return <h2>LOADING....</h2>;
@@ -44,6 +49,7 @@ export default function Home() {
 
   const onWellClick = (well: IWell) => {
     setSelecetedWell(well);
+    navigate(`/${well.wellId}`);
   };
   const handleFilterReport = (filters: string) => {
     // setSelecetedFilter(filters);

@@ -13,7 +13,7 @@ export function useReport(well?: IWell) {
 
 
   useEffect(() => {
-    if (!well) return;
+    if (!well) return ;
     fetchReportData();
   }, [well, fetchReportData]);
 

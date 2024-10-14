@@ -7,6 +7,8 @@ import Grid from "@mui/material/Grid2";
 import { IProject } from "../../interfaces/IProject";
 import { IWell } from "../../interfaces/IWell";
 import Carousel from "./Carousel";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
 
 interface IWellsProps {
   project: IProject;
@@ -16,6 +18,7 @@ interface IWellsProps {
 }
 
 export default function Wells(props: IWellsProps) {
+
   return (
     <>
       <Grid container mb={5}>
