@@ -1,16 +1,14 @@
-import { WellsProvider } from "./components/Wells/WellsProvider";
-import Home from "./pages/Home/Home";
+import HomePage from "./pages/HomePage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 function App() {
   return (
-    <WellsProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/*" element={<Home />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/wells?/:wellId?" element={<HomePage />} />
         </Routes>
       </BrowserRouter>
-    </WellsProvider>
   );
 }
 

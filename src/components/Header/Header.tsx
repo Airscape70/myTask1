@@ -3,28 +3,23 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import SearchIcon from "@mui/icons-material/Search";
-import { IProject } from "../../interfaces/IProject";
 import BasicMenu from "./BasicMenu";
-import { Search, SearchIconWrapper, StyledInputBase } from "./muiComponentsStyled/componentStyled";
+import {
+  Search,
+  SearchIconWrapper,
+  StyledInputBase,
+} from "./HeaderStyled/headerStyled";
+import { NAV_ITEMS } from "../../constants/constants";
 
-const navItems:string[] = ["Home", "About", "Contact"];
+export default function Header() {
 
-interface IHeaderProps {
-  data: IProject[];
-  onProjectClick: (event: IProject) => void;
-};
-
-export default function Header(props: IHeaderProps) {
   return (
     <AppBar position="static">
       <Toolbar>
-        <BasicMenu
-          data={props.data}
-          onProjectClick={props.onProjectClick}
-        />
+        <BasicMenu />
 
         <Box sx={{ xs: "none", sm: "block" }}>
-          {navItems.map((item) => (
+          {NAV_ITEMS.map((item) => (
             <Button key={item} sx={{ color: "#fff" }}>
               {item}
             </Button>

@@ -22,6 +22,7 @@ export async function getSites(projectId: string) {
   });
   return data;
 }
+
 export async function getWells(siteIds: string) {
   const { data } = await instance.get(`CdWellSource/siteId/${siteIds}`, {
     params: {
@@ -56,7 +57,6 @@ export async function getReport(
     hasFilter && filteredEventId.length > 0
       ? `/eventId/${filteredEventId}`
       : "";
-
 
   const { data } = await instance.get(
     `DmReportJournal/wellId/${wellId}${filteredUrl}`,

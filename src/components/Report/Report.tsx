@@ -1,11 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { MaterialReactTable } from "material-react-table";
 import { IReport } from "../../interfaces/IReport";
 import { Box, Chip, Stack, Typography } from "@mui/material";
 import { reportsTypeFilters } from "../../constants/constants";
+import { DataContext } from "../../providers/DataProvider";
 
-export default function Report({ report }: { report?: IReport[] }) {
-  const [repo, setRepo] = useState<IReport[] | undefined>([]);
+export default function Report() {
+  const { report, selectedPlan } = useContext(DataContext);
+  const [filteredReport, setFilteredReport] = useState<IReport[] | undefined>([]);
 
   const columns = useMemo(
     () => [
@@ -18,17 +20,21 @@ export default function Report({ report }: { report?: IReport[] }) {
     []
   );
 
-  const handleOnTypeFilter = (alias: string) => {
-    setRepo(report);
-    setRepo(repo?.filter((rep) => rep.reportAlias === alias));
+  const reportFilteredPlan = report?.filter(
+    (el) => el.reportAlias === selectedPlan[0]
+  );
+
+  const handleOnClickFilter = (alias: string) => {
+    setFilteredReport(report?.filter((rep) => rep.reportAlias === alias));
   };
   const handleDeleteTypeFilter = () => {
-    setRepo(report);
+    setFilteredReport(report);
   };
 
   useEffect(() => {
-    setRepo(report);
-  }, [report, setRepo]);
+
+    setFilteredReport(report);
+  }, [report, setFilteredReport]);
 
   return (
     <>
@@ -41,7 +47,7 @@ export default function Report({ report }: { report?: IReport[] }) {
             <Chip
               key={filter.alias}
               label={filter.type}
-              onClick={() => handleOnTypeFilter(filter.alias)}
+              onClick={() => handleOnClickFilter(filter.alias)}
               onDelete={() => handleDeleteTypeFilter()}
               size="small"
             />
@@ -51,7 +57,7 @@ export default function Report({ report }: { report?: IReport[] }) {
 
       <MaterialReactTable
         columns={columns}
-        data={repo!}
+        data={selectedPlan.length > 0 ? reportFilteredPlan! : filteredReport!}
         enablePagination={true}
         enableSorting={true}
         enableColumnFilters={false}

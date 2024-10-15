@@ -3,24 +3,25 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import { Box, ToggleButton } from "@mui/material";
 import { useContext } from "react";
-import { WellsContext } from "./WellsProvider";
 import { IWell } from "../../interfaces/IWell";
 import { EVENTS_CODES } from "../../constants/constants";
+import { DataContext } from "../../providers/DataProvider";
 
 export default function WellCardActions(well: IWell) {
   const {
     selectedEventCodes,
     setSelectedEventCodes,
     selectedWell,
-    setSelecetedWell,
-    selectedPlan,
-    setSelectedPlan} = useContext(WellsContext);
+    setSelectedWell,
+    setSelectedPlan} = useContext(DataContext);
 
   const isToogleSelected = (code: string) =>
-    selectedWell?.wellId === well.wellId && selectedEventCodes.includes(code);
+    selectedWell?.wellId === well.wellId && 
+    selectedEventCodes.includes(code);
 
   const handleFilterChange = (code: string) => {
     const selected = isToogleSelected(code);
+
     if (selectedWell?.wellId !== well.wellId) {
       setSelectedEventCodes([code]);
     } else {
@@ -30,7 +31,8 @@ export default function WellCardActions(well: IWell) {
           : [...selectedEventCodes, code]
       );
     }
-    setSelecetedWell(well);
+
+    setSelectedWell(well);
     setSelectedPlan([]);
   };
 
@@ -38,12 +40,12 @@ export default function WellCardActions(well: IWell) {
     if (selectedWell?.wellId === well.wellId) {
       setSelectedPlan([plan])
     } else {
-      setSelecetedWell(well)
+      setSelectedWell(well)
       setSelectedPlan([plan])
     }
   };
   const handleFilterReset = (well: IWell) => {
-    setSelecetedWell(well);
+    setSelectedWell(well);
     setSelectedPlan([]);
     setSelectedEventCodes([])
   };

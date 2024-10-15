@@ -5,13 +5,18 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
 import { Box } from "@mui/material";
+import { DataContext } from "../../providers/DataProvider";
 
-type BasicMenuProps = {
-  data: IProject[];
-  onProjectClick: (event: IProject) => void;
-};
 
-export default function BasicMenu(props: BasicMenuProps) {
+
+export default function BasicMenu() {
+
+  const { projects, setSelectedProject} = React.useContext(DataContext);
+
+  const handleProjectClick = (project: IProject) => {
+    setSelectedProject(project);
+  };
+
   return (
     <Box sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}>
       <PopupState  variant="popover" popupId="demo-popup-menu">
@@ -22,10 +27,10 @@ export default function BasicMenu(props: BasicMenuProps) {
             </Button>
   
             <Menu {...bindMenu(popupState)}>
-              {props.data.map((el: IProject) => (
+              {projects.map((el: IProject) => (
                 <MenuItem
                   key={el.projectId}
-                  onClick={() => props.onProjectClick(el)}
+                  onClick={() => handleProjectClick(el)}
                 >
                   {el.projectName}
                 </MenuItem>

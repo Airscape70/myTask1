@@ -4,17 +4,17 @@ import Typography from "@mui/material/Typography";
 import WellCardActions from "./WellCardActions";
 import { IWell } from "../../interfaces/IWell";
 import { Box } from "@mui/material";
-import { WellsContext } from "./WellsProvider";
 import { useContext } from "react";
+import { DataContext } from "../../providers/DataProvider";
 
 export default function WellCard(well: IWell) {
-  const { setSelecetedWell, setSelectedEventCodes, setSelectedPlan } =
-    useContext(WellsContext);
+  const { setSelectedWell, setSelectedEventCodes, setSelectedPlan, currentWell } = useContext(DataContext);
 
   const handleOnClick = (well: IWell) => {
     setSelectedEventCodes([]);
     setSelectedPlan([]);
-    setSelecetedWell(well);
+    setSelectedWell(well);
+    currentWell(well)
   };
 
   return (
@@ -26,10 +26,10 @@ export default function WellCard(well: IWell) {
         flexFlow: "row wrap",
         mr: 5,
         mt: 1,
-        "&:hover":{
+        "&:hover": {
           boxShadow: "0px 5px 10px rgb(100, 100, 100)",
-          cursor: "pointer"
-        } 
+          cursor: "pointer",
+        },
       }}
     >
       <Box
@@ -46,9 +46,6 @@ export default function WellCard(well: IWell) {
               sx={{ color: "text.secondary", fontSize: 14 }}
             >
               Куст: {well.siteId}
-            </Typography>
-            <Typography variant="h5">
-              id: {well.wellId}
             </Typography>
             <Typography variant="h5">
               Скважина: {well.wellCommonName}
