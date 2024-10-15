@@ -13,6 +13,9 @@ export function useWells(sites: ISite[]) {
     },
     {
       enabled: false,
+      retry: false,
+      refetchOnWindowFocus: false,
+      keepPreviousData: true
     }
   );
 

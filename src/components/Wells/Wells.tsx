@@ -11,8 +11,6 @@ import Carousel from "./Carousel";
 interface IWellsProps {
   project: IProject;
   wells: IWell[];
-  onWellClick: (wellid: IWell) => void;
-  handleFilterReport: (filters: string) => void;
 }
 
 export default function Wells(props: IWellsProps) {
@@ -26,12 +24,7 @@ export default function Wells(props: IWellsProps) {
 
           <Box sx={{ overflowX: "auto", whiteSpace: "nowrap" }} pb={5}>
             {props.wells.map((el) => (
-              <WellCard
-                key={el.wellId}
-                onWellClick={props.onWellClick}
-                handleFilterReport={props.handleFilterReport}
-                well={el}
-              />
+              <WellCard key={el.wellId} {...el} />
             ))}
           </Box>
           {/* <Carousel /> */}

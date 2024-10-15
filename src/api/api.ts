@@ -1,4 +1,5 @@
 import axios from "axios";
+import { IEvent } from "../interfaces/IEvent";
 
 const instance = axios.create({
   baseURL: "https://edmrest.emeryone.com/Universal/",
@@ -36,26 +37,35 @@ export async function getEvents(wellId?: string) {
       fields: "wellId,eventId,eventCode",
     },
   });
+
   return data;
 }
 
-export async function getReport(wellId: string) {
-  const { data } = await instance.get(`DmReportJournal/wellId/${wellId}`, {
-    params: {
-      fields:
-        "eventCode,reportJournalId,wellId,wellboreId,dateReport,eventId,reportAlias,description,entityType,reportNo",
-    },
-  });
-  return data;
-}
+export async function getReport(
+  wellId: string,
+  events?: IEvent[],
+  eventCodeFilter?: string[]
+) {
+  const hasFilter = !(eventCodeFilter?.length === 0);
+
+  const filteredEventId = events!
+    .filter((event) => eventCodeFilter!.includes(event.eventCode))
+    .reduce((acc, event) => (acc += event.eventId + ","), "");
+
+  const filteredUrl =
+    hasFilter && filteredEventId.length > 0
+      ? `/eventId/${filteredEventId}`
+      : "";
 
 
-export async function getFilteredReports(eventIds?: string) {
-  const { data } = await instance.get(`DmReportJournal/wellId/636Znb6AdT/eventId/${eventIds}`, {
-    params: {
-      fields:
-        "eventCode,reportJournalId,wellId,wellboreId,dateReport,eventId,reportAlias,description,entityType,reportNo",
-    },
-  });
+  const { data } = await instance.get(
+    `DmReportJournal/wellId/${wellId}${filteredUrl}`,
+    {
+      params: {
+        fields:
+          "eventCode,reportJournalId,wellId,wellboreId,dateReport,eventId,reportAlias,description,entityType,reportNo",
+      },
+    }
+  );
   return data;
 }

@@ -3,18 +3,19 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import WellCardActions from "./WellCardActions";
 import { IWell } from "../../interfaces/IWell";
-import { IEvent } from "../../interfaces/IEvent";
-import { useEvents } from "../../hooks/useEvents";
 import { Box } from "@mui/material";
+import { WellsContext } from "./WellsProvider";
+import { useContext } from "react";
 
-interface IWellCardProps {
-  well: IWell;
-  onWellClick: (wellid: IWell) => void;
-  handleFilterReport: (filter: string) => void;
-}
-export default function WellCard(props: IWellCardProps) {
-  const { well, onWellClick, handleFilterReport } = props;
-  const events = useEvents(props.well.wellId);
+export default function WellCard(well: IWell) {
+  const { setSelecetedWell, setSelectedEventCodes, setSelectedPlan } =
+    useContext(WellsContext);
+
+  const handleOnClick = (well: IWell) => {
+    setSelectedEventCodes([]);
+    setSelectedPlan([]);
+    setSelecetedWell(well);
+  };
 
   return (
     <Card
@@ -25,23 +26,33 @@ export default function WellCard(props: IWellCardProps) {
         flexFlow: "row wrap",
         mr: 5,
         mt: 1,
-        "&:hover": {
-          cursor: "pointer",
-          boxShadow: "0px 5px 10px rgb(100, 100, 100);"
-        },
+        "&:hover":{
+          boxShadow: "0px 5px 10px rgb(100, 100, 100)",
+          cursor: "pointer"
+        } 
       }}
-
     >
-     <Box sx={{display: "flex", flexFlow: "column", justifyContent: "space-between"}} >
-        <Box >
-          <CardContent sx={{ height: "100px", mb:"30px"}} onClick={() => onWellClick(well)}>
+      <Box
+        sx={{
+          display: "flex",
+          flexFlow: "column",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box onClick={() => handleOnClick(well)}>
+          <CardContent sx={{ height: "100px", mb: "30px" }}>
             <Typography
               gutterBottom
               sx={{ color: "text.secondary", fontSize: 14 }}
             >
               Куст: {well.siteId}
             </Typography>
-            <Typography variant="h5">Скважина: {well.wellCommonName}</Typography>
+            <Typography variant="h5">
+              id: {well.wellId}
+            </Typography>
+            <Typography variant="h5">
+              Скважина: {well.wellCommonName}
+            </Typography>
             <Typography sx={{ color: "text.secondary", fontSize: 12 }}>
               {well.reason}
             </Typography>
@@ -50,12 +61,9 @@ export default function WellCard(props: IWellCardProps) {
             </Typography>
           </CardContent>
         </Box>
-  
-        <WellCardActions
-          events={events}
-          handleFilterReport={handleFilterReport}
-        />
-     </Box>
+
+        <WellCardActions {...well} />
+      </Box>
     </Card>
   );
 }
