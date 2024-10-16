@@ -7,9 +7,8 @@ import { DataContext } from "../../providers/DataProvider";
 
 export default function Report() {
   const { report, selectedPlan } = useContext(DataContext);
-  const [filteredReport, setFilteredReport] = useState<IReport[] | undefined>(
-    []
-  );
+  const [filteredReport, setFilteredReport] = useState<IReport[] | undefined>([]);
+  const [selectedType, setSelectedType] = useState<string>('');
 
   const columns = useMemo(
     () => [
@@ -27,12 +26,16 @@ export default function Report() {
   );
 
   const handleOnClickFilter = (alias: string) => {
+    setSelectedType(alias)
     setFilteredReport(report?.filter((rep) => rep.reportAlias === alias));
   };
 
   const handleDeleteTypeFilter = () => {
     setFilteredReport(report);
+    setSelectedType('')
   };
+
+
 
   useEffect(() => {
     setFilteredReport(report);
@@ -52,20 +55,22 @@ export default function Report() {
               onClick={() => handleOnClickFilter(filter.alias)}
               onDelete={() => handleDeleteTypeFilter()}
               size="small"
+              autoCorrect="true"
+              color={selectedType === filter.alias ? 'primary' : 'default' }
             />
           ))}
         </Stack>
       </Box>
       <MaterialReactTable
-          columns={columns}
-          data={selectedPlan.length > 0 ? reportFilteredPlan! : filteredReport!}
-          enablePagination={true}
-          enableSorting={true}
-          enableColumnFilters={false}
-          enableColumnActions={false}
-          enableHiding={false}
-          enableTopToolbar={false}
-        />
+        columns={columns}
+        data={selectedPlan.length > 0 ? reportFilteredPlan! : filteredReport!}
+        enablePagination={true}
+        enableSorting={true}
+        enableColumnFilters={false}
+        enableColumnActions={false}
+        enableHiding={false}
+        enableTopToolbar={false}
+      />
     </>
   );
 }
