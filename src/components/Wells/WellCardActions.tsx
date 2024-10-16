@@ -13,11 +13,11 @@ export default function WellCardActions(well: IWell) {
     setSelectedEventCodes,
     selectedWell,
     setSelectedWell,
-    setSelectedPlan} = useContext(DataContext);
+    setSelectedPlan,
+  } = useContext(DataContext);
 
   const isToogleSelected = (code: string) =>
-    selectedWell?.wellId === well.wellId && 
-    selectedEventCodes.includes(code);
+    selectedWell?.wellId === well.wellId && selectedEventCodes.includes(code);
 
   const handleFilterChange = (code: string) => {
     const selected = isToogleSelected(code);
@@ -38,18 +38,17 @@ export default function WellCardActions(well: IWell) {
 
   const handlePlanChange = (plan: string) => {
     if (selectedWell?.wellId === well.wellId) {
-      setSelectedPlan([plan])
+      setSelectedPlan([plan]);
     } else {
-      setSelectedWell(well)
-      setSelectedPlan([plan])
+      setSelectedWell(well);
+      setSelectedPlan([plan]);
     }
   };
   const handleFilterReset = (well: IWell) => {
     setSelectedWell(well);
     setSelectedPlan([]);
-    setSelectedEventCodes([])
+    setSelectedEventCodes([]);
   };
-  
 
   return (
     <Box sx={{ justifyContent: "flex-end" }}>
@@ -66,8 +65,10 @@ export default function WellCardActions(well: IWell) {
               borderRadius: "50px",
               px: "20px",
               py: "5px",
+              fontWeight: 500,
             }}
             value="check"
+            color="primary"
             selected={isToogleSelected(code)}
             onChange={() => handleFilterChange(code)}
           >
@@ -79,14 +80,17 @@ export default function WellCardActions(well: IWell) {
       <CardActions>
         <Stack direction="row" spacing={1}>
           <Button
-            size="small"
+            size="medium"
             variant="text"
             onClick={() => handlePlanChange("GEN_PLAN")}
           >
             План
           </Button>
-          <Button size="small" variant="text" 
-          onClick={() => handleFilterReset(well)}>
+          <Button
+            size="medium"
+            variant="text"
+            onClick={() => handleFilterReset(well)}
+          >
             Все отчеты
           </Button>
         </Stack>

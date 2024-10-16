@@ -21,7 +21,7 @@ function HomeContent() {
   );
 }
 
-export default function HomePage(props: React.PropsWithChildren) {
+export default function HomePage() {
   return (
     <DataProvider>
       <HomeContent />

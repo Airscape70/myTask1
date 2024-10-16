@@ -4,15 +4,15 @@ import { useEffect } from "react";
 import { IEvent } from "../interfaces/IEvent";
 
 export function useEvents(wellId?: string) {
-  const { data: events = [], refetch: fetchEvents} = useQuery<
+  const { data: events = [], refetch: fetchEvents } = useQuery<
     IEvent[]
   >(["eventId", wellId], 
     async () => wellId && getEvents(wellId), {
       enabled: false,
-      retry: false,
       refetchOnWindowFocus: false,
       keepPreviousData: true
   });
+
 
   useEffect(() => {
     if (!wellId) return;

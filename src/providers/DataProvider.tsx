@@ -4,7 +4,6 @@ import {
   FC,
   PropsWithChildren,
   useEffect,
-  useRef,
 } from "react";
 import { IWell } from "../interfaces/IWell";
 import { IProject } from "../interfaces/IProject";
@@ -15,24 +14,8 @@ import { useWells } from "../hooks/useWells";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEvents } from "../hooks/useEvents";
 import { useReport } from "../hooks/useReport";
-import { IEvent } from "../interfaces/IEvent";
-import { IReport } from "../interfaces/IReport";
-
-interface DataContextValue {
-  projects: IProject[];
-  wells?: IWell[];
-  events?: IEvent[];
-  report?: IReport[];
-  currentWell: (well: IWell) => void;
-  selectedProject?: IProject;
-  setSelectedProject: (project: IProject) => void;
-  selectedWell?: IWell;
-  setSelectedWell: (well: IWell) => void;
-  selectedPlan: string[];
-  setSelectedPlan: (plan: string[]) => void;
-  selectedEventCodes: string[];
-  setSelectedEventCodes: (codes: string[]) => void;
-}
+import { DataContextValue } from "../interfaces/IDataProvider";
+import Loading from "../components/Common/Loading";
 
 export const DataContext = createContext<DataContextValue>({
   setSelectedProject: () => {},
@@ -40,16 +23,19 @@ export const DataContext = createContext<DataContextValue>({
   setSelectedPlan: () => {},
   setSelectedEventCodes: () => {},
   currentWell: () => {},
+  currentProject: () => {},
   projects: [],
   selectedPlan: [],
   selectedEventCodes: [],
 });
 
 export const DataProvider: FC<PropsWithChildren> = ({ children }) => {
-  const { wellId } = useParams();
+  const { projectId, wellId } = useParams();
   const navigate = useNavigate();
-
-  const { status, data: projects } = useQuery("projects", getProjects);
+  const { status, data: projects } = useQuery<IProject[] | undefined>(
+    "projects",
+    getProjects
+  );
 
   const [selectedProject, setSelectedProject] = useState<
     IProject | undefined
@@ -63,34 +49,47 @@ export const DataProvider: FC<PropsWithChildren> = ({ children }) => {
   const events = useEvents(selectedWell?.wellId);
   const report = useReport(selectedWell, selectedEventCodes, events);
 
-  const currentWell = (well: IWell) => {
-    selectedProject && navigate(`/${well.wellId}`);
-  };
-
   useEffect(() => {
     if (!projects) return;
-    setSelectedProject(projects[0]);
-  }, [projects]);
+
+    const defaultProject = projectId
+      ? projects.find((p) => p.projectId === projectId)
+      : projects[0];
+
+    setSelectedProject(defaultProject);
+  }, [projects, projectId]);
 
   useEffect(() => {
     if (!wells) return;
+
     const defaultWell = wellId
       ? wells.find((w) => w.wellId === wellId)
       : wells[0];
-    setSelectedWell(defaultWell);
-  }, [wells, setSelectedProject, wellId]);
+
+    wells.length > 0 && setSelectedWell(defaultWell);
+  }, [wells, setSelectedWell, wellId]);
+
+  const currentProject = (project: IProject) => {
+    navigate(`/projects/${project.projectId}`);
+  };
+
+  const currentWell = (well: IWell) => {
+    selectedProject &&
+      navigate(`/projects/${selectedProject.projectId}/wells/${well.wellId}`);
+  };
 
   if (status === "loading") {
-    return <h2>LOADING....</h2>;
+    return <Loading />;
   }
 
   if (status === "error") {
-    return <h2>ERRROR</h2>;
+    return <h2>Error</h2>;
   }
 
   return (
     <DataContext.Provider
       value={{
+        currentProject,
         wells,
         currentWell,
         projects,

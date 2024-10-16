@@ -21,6 +21,7 @@ export default function Carousel() {
 
   return (
     <TablePagination
+    
       component="div"
       count={100}
       page={page}

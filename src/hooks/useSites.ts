@@ -10,7 +10,6 @@ export function useSites(project?: IProject) {
     async () => project && getSites(project.projectId),
     {
       enabled: false,
-      retry: false,
       refetchOnWindowFocus: false,
       keepPreviousData: true
     }

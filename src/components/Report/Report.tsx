@@ -7,7 +7,9 @@ import { DataContext } from "../../providers/DataProvider";
 
 export default function Report() {
   const { report, selectedPlan } = useContext(DataContext);
-  const [filteredReport, setFilteredReport] = useState<IReport[] | undefined>([]);
+  const [filteredReport, setFilteredReport] = useState<IReport[] | undefined>(
+    []
+  );
 
   const columns = useMemo(
     () => [
@@ -27,14 +29,14 @@ export default function Report() {
   const handleOnClickFilter = (alias: string) => {
     setFilteredReport(report?.filter((rep) => rep.reportAlias === alias));
   };
+
   const handleDeleteTypeFilter = () => {
     setFilteredReport(report);
   };
 
   useEffect(() => {
-
     setFilteredReport(report);
-  }, [report, setFilteredReport]);
+  }, [report]);
 
   return (
     <>
@@ -54,17 +56,16 @@ export default function Report() {
           ))}
         </Stack>
       </Box>
-
       <MaterialReactTable
-        columns={columns}
-        data={selectedPlan.length > 0 ? reportFilteredPlan! : filteredReport!}
-        enablePagination={true}
-        enableSorting={true}
-        enableColumnFilters={false}
-        enableColumnActions={false}
-        enableHiding={false}
-        enableTopToolbar={false}
-      />
+          columns={columns}
+          data={selectedPlan.length > 0 ? reportFilteredPlan! : filteredReport!}
+          enablePagination={true}
+          enableSorting={true}
+          enableColumnFilters={false}
+          enableColumnActions={false}
+          enableHiding={false}
+          enableTopToolbar={false}
+        />
     </>
   );
 }

@@ -1,5 +1,7 @@
+import { IReport } from './../interfaces/IReport';
 import axios from "axios";
 import { IEvent } from "../interfaces/IEvent";
+
 
 const instance = axios.create({
   baseURL: "https://edmrest.emeryone.com/Universal/",

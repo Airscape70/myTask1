@@ -4,7 +4,7 @@ export interface IReport {
   wellboreId: string;
   eventId: string;
   dateReport: string;
-  reportNo: string;
+  reportNo: string | number;
   description: string;
   entityType: string;
   eventCode: string;

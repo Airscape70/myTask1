@@ -8,10 +8,8 @@ import Carousel from "./Carousel";
 import { useContext } from "react";
 import { DataContext } from "../../providers/DataProvider";
 
-
-
 export default function Wells() {
-  const {selectedProject, wells} = useContext(DataContext)
+  const { selectedProject, wells } = useContext(DataContext);
   return (
     <>
       <Grid container mb={5}>

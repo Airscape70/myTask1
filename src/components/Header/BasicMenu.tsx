@@ -11,10 +11,11 @@ import { DataContext } from "../../providers/DataProvider";
 
 export default function BasicMenu() {
 
-  const { projects, setSelectedProject} = React.useContext(DataContext);
+  const { projects, setSelectedProject, currentProject} = React.useContext(DataContext);
 
   const handleProjectClick = (project: IProject) => {
     setSelectedProject(project);
+    currentProject(project)
   };
 
   return (
@@ -27,7 +28,7 @@ export default function BasicMenu() {
             </Button>
   
             <Menu {...bindMenu(popupState)}>
-              {projects.map((el: IProject) => (
+              {projects?.map((el) => (
                 <MenuItem
                   key={el.projectId}
                   onClick={() => handleProjectClick(el)}
