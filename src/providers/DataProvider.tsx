@@ -32,14 +32,14 @@ export const DataContext = createContext<DataContextValue>({
 export const DataProvider: FC<PropsWithChildren> = ({ children }) => {
   const { projectId, wellId } = useParams();
   const navigate = useNavigate();
-  const { status, data: projects } = useQuery<IProject[] | undefined>(
-    "projects",
-    getProjects
+  const { status, data: projects = [] } = useQuery<IProject[] | undefined>(
+    "projects", getProjects, {
+      refetchOnWindowFocus: false,
+      keepPreviousData: true,
+    }
   );
 
-  const [selectedProject, setSelectedProject] = useState<
-    IProject | undefined
-  >();
+  const [selectedProject, setSelectedProject] = useState<IProject | undefined >();
   const [selectedWell, setSelectedWell] = useState<IWell | undefined>();
   const [selectedPlan, setSelectedPlan] = useState<string[]>([]);
   const [selectedEventCodes, setSelectedEventCodes] = useState<string[]>([]);

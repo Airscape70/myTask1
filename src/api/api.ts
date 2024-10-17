@@ -1,50 +1,64 @@
-import { IReport } from './../interfaces/IReport';
 import axios from "axios";
 import { IEvent } from "../interfaces/IEvent";
-
 
 const instance = axios.create({
   baseURL: "https://edmrest.emeryone.com/Universal/",
 });
 
-export async function getProjects() {
-  const { data } = await instance.get("CdProjectSource", {
-    params: {
-      fields: "projectName,projectId",
-    },
-  });
-  return data;
+const consoleError = (error: any) => {
+  const errMsg = error.response
+    ? `Статус: ${error.response.status}, Данные: ${error.response.data}`
+    : error.request
+    ? "Нет ответа"
+    : `Ошибка настройки запроса: ${error.message}`;
+  alert(`${errMsg}`);
+};
+
+export function getProjects() {
+  return instance
+    .get("CdProjectSource", {
+      params: {
+        fields: "projectName,projectId",
+      },
+    })
+    .then((response) => response.data)
+    .catch((error) => consoleError(error));
 }
 
-export async function getSites(projectId: string) {
-  const { data } = await instance.get(`CdSiteSource/projectId/${projectId}`, {
-    params: {
-      fields: "projectId,siteId,siteName",
-    },
-  });
-  return data;
+export function getSites(projectId: string) {
+  return instance
+    .get(`CdSiteSource/projectId/${projectId}`, {
+      params: {
+        fields: "projectId,siteId,siteName",
+      },
+    })
+    .then((response) => response.data)
+    .catch((error) => consoleError(error));
 }
 
-export async function getWells(siteIds: string) {
-  const { data } = await instance.get(`CdWellSource/siteId/${siteIds}`, {
-    params: {
-      fields: "siteId,wellCommonName,wellId,spudDate,reason",
-    },
-  });
-  return data;
+export function getWells(siteIds: string) {
+  return instance
+    .get(`CdWellSource/siteId/${siteIds}`, {
+      params: {
+        fields: "siteId,wellCommonName,wellId,spudDate,reason",
+      },
+    })
+    .then((response) => response.data)
+    .catch((error) => consoleError(error));
 }
 
-export async function getEvents(wellId?: string) {
-  const { data } = await instance.get(`DmEventT/wellId/${wellId}`, {
-    params: {
-      fields: "wellId,eventId,eventCode",
-    },
-  });
-
-  return data;
+export function getEvents(wellId?: string) {
+  return instance
+    .get(`DmEventT/wellId/${wellId}`, {
+      params: {
+        fields: "wellId,eventId,eventCode",
+      },
+    })
+    .then((response) => response.data)
+    .catch((error) => consoleError(error));
 }
 
-export async function getReport(
+export function getReport(
   wellId: string,
   events?: IEvent[],
   eventCodeFilter?: string[]
@@ -60,14 +74,13 @@ export async function getReport(
       ? `/eventId/${filteredEventId}`
       : "";
 
-  const { data } = await instance.get(
-    `DmReportJournal/wellId/${wellId}${filteredUrl}`,
-    {
+  return instance
+    .get(`DmReportJournal/wellId/${wellId}${filteredUrl}`, {
       params: {
         fields:
           "eventCode,reportJournalId,wellId,wellboreId,dateReport,eventId,reportAlias,description,entityType,reportNo",
       },
-    }
-  );
-  return data;
+    })
+    .then((response) => response.data)
+    .catch((error) => consoleError(error));
 }
