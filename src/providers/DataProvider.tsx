@@ -33,13 +33,14 @@ export const DataProvider: FC<PropsWithChildren> = ({ children }) => {
   const { projectId, wellId } = useParams();
   const navigate = useNavigate();
   const { status, data: projects = [] } = useQuery<IProject[] | undefined>(
-    "projects", getProjects, {
+    "projects", getProjects,
+    {
       refetchOnWindowFocus: false,
       keepPreviousData: true,
     }
   );
 
-  const [selectedProject, setSelectedProject] = useState<IProject | undefined >();
+  const [selectedProject, setSelectedProject] = useState<IProject | undefined>();
   const [selectedWell, setSelectedWell] = useState<IWell | undefined>();
   const [selectedPlan, setSelectedPlan] = useState<string[]>([]);
   const [selectedEventCodes, setSelectedEventCodes] = useState<string[]>([]);
@@ -67,7 +68,9 @@ export const DataProvider: FC<PropsWithChildren> = ({ children }) => {
       : wells[0];
 
     wells.length > 0 && setSelectedWell(defaultWell);
-  }, [wells, setSelectedWell, wellId]);
+  }, [wells, wellId]);
+
+
 
   const currentProject = (project: IProject) => {
     navigate(`/projects/${project.projectId}`);

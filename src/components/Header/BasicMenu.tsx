@@ -11,7 +11,7 @@ import { DataContext } from "../../providers/DataProvider";
 
 export default function BasicMenu() {
 
-  const { projects, setSelectedProject, currentProject} = React.useContext(DataContext);
+  const { projects, setSelectedProject, currentProject } = React.useContext(DataContext);
 
   const handleProjectClick = (project: IProject) => {
     setSelectedProject(project);

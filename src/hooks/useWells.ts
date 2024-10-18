@@ -3,7 +3,6 @@ import { IWell } from "../interfaces/IWell";
 import { ISite } from "../interfaces/ISites";
 import { getWells } from "../api/api";
 import { useEffect } from "react";
-import dayjs from "dayjs";
 
 export function useWells(sites: ISite[]) {
   const { data: wellsData = [], refetch: fetchWellsData } = useQuery<IWell[]>(

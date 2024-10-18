@@ -8,7 +8,7 @@ import {
   Search,
   SearchIconWrapper,
   StyledInputBase,
-} from "./HeaderStyled/headerStyled";
+} from "../styles";
 import { NAV_ITEMS } from "../../constants/constants";
 
 export default function Header() {

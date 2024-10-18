@@ -1,11 +1,12 @@
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import { Box, ToggleButton } from "@mui/material";
+import { Box } from "@mui/material";
 import { useContext } from "react";
 import { IWell } from "../../interfaces/IWell";
 import { EVENTS_CODES } from "../../constants/constants";
 import { DataContext } from "../../providers/DataProvider";
+import { StyledToggleButton } from "../styles";
 
 export default function WellCardActions(well: IWell) {
   const {
@@ -52,28 +53,17 @@ export default function WellCardActions(well: IWell) {
 
   return (
     <Box sx={{ justifyContent: "flex-end" }}>
-      <CardActions
-        sx={{
-          height: "60px",
-          pl: "16px",
-        }}
-      >
+      <CardActions sx={{ height: "60px", pl: "16px"}}>
         {EVENTS_CODES.map((code) => (
-          <ToggleButton
+          <StyledToggleButton
             key={code}
-            sx={{
-              borderRadius: "50px",
-              px: "20px",
-              py: "5px",
-              fontWeight: 500,
-            }}
             value="check"
             color="primary"
             selected={isToogleSelected(code)}
             onChange={() => handleFilterChange(code)}
           >
             {code}
-          </ToggleButton>
+          </StyledToggleButton>
         ))}
       </CardActions>
 

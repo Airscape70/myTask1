@@ -1,5 +1,6 @@
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
+import { ToggleButton } from "@mui/material";
 
 export const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -41,4 +42,30 @@ export const StyledInputBase = styled(InputBase)(({ theme }) => ({
       },
     },
   },
+}));
+
+export const StyledCard = styled("div")(({ theme }) => ({
+  width: 300,
+  height: 240,
+  display: "inline-block",
+  flexFlow: "row wrap",
+  mr: 5,
+  mt: 1,
+  "&:hover": {
+    boxShadow: "0px 5px 5px rgba(100, 100, 100, 0.5)",
+    cursor: "pointer",
+  },
+}));
+
+export const StyledCardBox = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexFlow: "column",
+  justifyContent: "space-between",
+}));
+
+export const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
+  borderRadius: "50px",
+  px: "20px",
+  py: "5px",
+  fontWeight: 500,
 }));

@@ -1,4 +1,3 @@
-import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import WellCardActions from "./WellCardActions";
@@ -7,6 +6,7 @@ import { Box } from "@mui/material";
 import { useContext } from "react";
 import { DataContext } from "../../providers/DataProvider";
 import dayjs from "dayjs";
+import { StyledCard, StyledCardBox } from "../styles";
 
 export default function WellCard(well: IWell) {
   const {
@@ -28,30 +28,14 @@ export default function WellCard(well: IWell) {
 
   return (
     <>
-      <Card
+      <StyledCard
         sx={{
-          width: 300,
-          height: 240,
-          display: "inline-block",
-          flexFlow: "row wrap",
-          mr: 5,
-          mt: 1,
-          "&:hover": {
-            boxShadow: "0px 5px 5px rgba(100, 100, 100, 0.5)",
-            cursor: "pointer",
-          },
           boxShadow: isSelecetedWell
             ? "0px 5px 10px rgb(100, 100, 100)"
             : "none",
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            flexFlow: "column",
-            justifyContent: "space-between",
-          }}
-        >
+        <StyledCardBox>
           <Box onClick={() => handleOnClick(well)}>
             <CardContent sx={{ height: "100px", mb: "30px" }}>
               <Typography
@@ -60,15 +44,18 @@ export default function WellCard(well: IWell) {
               >
                 Куст: {well.siteId}
               </Typography>
+
               <Typography
                 variant="h5"
                 sx={{ color: isSelecetedWell ? "#1976D3" : "#383838" }}
               >
                 Скважина: {well.wellCommonName}
               </Typography>
+
               <Typography sx={{ color: "text.secondary", fontSize: 12 }}>
                 {well.reason}
               </Typography>
+
               <Typography sx={{ color: "text.secondary", fontSize: 12 }}>
                 Дата забуревания:{" "}
                 {dayjs(validSpudDate, "DD.MM.YYYY").isValid()
@@ -79,8 +66,8 @@ export default function WellCard(well: IWell) {
           </Box>
 
           <WellCardActions {...well} />
-        </Box>
-      </Card>
+        </StyledCardBox>
+      </StyledCard>
     </>
   );
 }

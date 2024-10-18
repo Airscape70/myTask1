@@ -6,81 +6,64 @@ const instance = axios.create({
 });
 
 const consoleError = (error: any) => {
-  const errMsg = error.response
+  const errResponse = error.response
     ? `Статус: ${error.response.status}, Данные: ${error.response.data}`
     : error.request
     ? "Нет ответа"
     : `Ошибка настройки запроса: ${error.message}`;
-  alert(`${errMsg}`);
+  alert(`${errResponse}`);
 };
 
-export function getProjects() {
+const getResponse = (fields: string, url: string, id: string = "") => {
   return instance
-    .get("CdProjectSource", {
+    .get(`${url}/${id}`, {
       params: {
-        fields: "projectName,projectId",
+        fields: `${fields}`,
       },
     })
     .then((response) => response.data)
     .catch((error) => consoleError(error));
-}
+};
 
-export function getSites(projectId: string) {
-  return instance
-    .get(`CdSiteSource/projectId/${projectId}`, {
-      params: {
-        fields: "projectId,siteId,siteName",
-      },
-    })
-    .then((response) => response.data)
-    .catch((error) => consoleError(error));
-}
+export const getProjects = () =>
+  getResponse("projectName,projectId", "CdProjectSource");
 
-export function getWells(siteIds: string) {
-  return instance
-    .get(`CdWellSource/siteId/${siteIds}`, {
-      params: {
-        fields: "siteId,wellCommonName,wellId,spudDate,reason",
-      },
-    })
-    .then((response) => response.data)
-    .catch((error) => consoleError(error));
-}
+export const getSites = (projectId: string) =>
+  getResponse(
+    "projectId,siteId,siteName",
+    "CdSiteSource/projectId/",
+    projectId
+  );
 
-export function getEvents(wellId?: string) {
-  return instance
-    .get(`DmEventT/wellId/${wellId}`, {
-      params: {
-        fields: "wellId,eventId,eventCode",
-      },
-    })
-    .then((response) => response.data)
-    .catch((error) => consoleError(error));
-}
+export const getWells = (siteIds: string) =>
+  getResponse(
+    "siteId,wellCommonName,wellId,spudDate,reason",
+    "CdWellSource/siteId/",
+    siteIds
+  );
 
-export function getReport(
+export const getEvents = (wellId?: string) =>
+  getResponse("wellId,eventId,eventCode", "DmEventT/wellId/", wellId);
+
+export const getReport = (
   wellId: string,
   events?: IEvent[],
   eventCodeFilter?: string[]
-) {
+) => {
   const hasFilter = !(eventCodeFilter?.length === 0);
 
   const filteredEventId = events!
     .filter((event) => eventCodeFilter!.includes(event.eventCode))
     .reduce((acc, event) => (acc += event.eventId + ","), "");
 
-  const filteredUrl =
+  const reportId =
     hasFilter && filteredEventId.length > 0
-      ? `/eventId/${filteredEventId}`
-      : "";
+      ? `${wellId}/eventId/${filteredEventId}`
+      : `${wellId}`;
 
-  return instance
-    .get(`DmReportJournal/wellId/${wellId}${filteredUrl}`, {
-      params: {
-        fields:
-          "eventCode,reportJournalId,wellId,wellboreId,dateReport,eventId,reportAlias,description,entityType,reportNo",
-      },
-    })
-    .then((response) => response.data)
-    .catch((error) => consoleError(error));
-}
+  return getResponse(
+    "eventCode,reportJournalId,wellId,wellboreId,dateReport,eventId,reportAlias,description,entityType,reportNo",
+    "DmReportJournal/wellId/",
+    reportId
+  );
+};
