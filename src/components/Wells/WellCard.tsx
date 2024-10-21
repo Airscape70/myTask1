@@ -3,25 +3,30 @@ import Typography from "@mui/material/Typography";
 import WellCardActions from "./WellCardActions";
 import { IWell } from "../../interfaces/IWell";
 import { Box } from "@mui/material";
-import { useContext } from "react";
-import { DataContext } from "../../providers/DataProvider";
 import dayjs from "dayjs";
 import { StyledCard, StyledCardBox } from "../styles";
+import { useFilterStore } from "../../store/store";
 
-export default function WellCard(well: IWell) {
+
+interface IWellCard {
+  well: IWell,
+  currentWell: (well: IWell) => void
+}
+
+export default function WellCard(props: IWellCard) {
+  const {well, currentWell} = props
   const {
     setSelectedWell,
-    setSelectedEventCodes,
-    setSelectedPlan,
-    currentWell,
+    removeSelectedEventCodes,
+    removeSelectedPlan,
     selectedWell,
-  } = useContext(DataContext);
+  } = useFilterStore();
 
   const handleOnClick = (well: IWell) => {
-    setSelectedEventCodes([]);
-    setSelectedPlan([]);
+    removeSelectedEventCodes();
+    removeSelectedPlan();
     setSelectedWell(well);
-    currentWell(well);
+    currentWell(well)
   };
   const validSpudDate = dayjs(well.spudDate).format("DD.MM.YYYY");
   const isSelecetedWell = selectedWell?.wellId === well.wellId;

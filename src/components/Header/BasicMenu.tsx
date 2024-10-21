@@ -5,17 +5,16 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
 import { Box } from "@mui/material";
-import { DataContext } from "../../providers/DataProvider";
+import { useFilterStore } from "../../store/store";
 
 
 
 export default function BasicMenu() {
 
-  const { projects, setSelectedProject, currentProject } = React.useContext(DataContext);
+  const {projects, setSelectedProject } = useFilterStore()
 
   const handleProjectClick = (project: IProject) => {
     setSelectedProject(project);
-    currentProject(project)
   };
 
   return (
@@ -26,9 +25,8 @@ export default function BasicMenu() {
             <Button variant="contained" {...bindTrigger(popupState)}>
               Menu
             </Button>
-  
             <Menu {...bindMenu(popupState)}>
-              {projects?.map((el) => (
+              {projects.map((el) => (
                 <MenuItem
                   key={el.projectId}
                   onClick={() => handleProjectClick(el)}

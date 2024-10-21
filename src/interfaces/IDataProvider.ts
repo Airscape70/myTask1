@@ -8,14 +8,18 @@ export interface DataContextValue {
   wells?: IWell[];
   events?: IEvent[];
   report?: IReport[];
+  selectedProject?: IProject;
+  selectedWell?: IWell;
+  selectedPlan: string[];
+  selectedEventCodes: string[];
   currentProject: (project: IProject) => void;
   currentWell: (well: IWell) => void;
-  selectedProject?: IProject;
   setSelectedProject: (project: IProject) => void;
-  selectedWell?: IWell;
   setSelectedWell: (well: IWell) => void;
-  selectedPlan: string[];
   setSelectedPlan: (plan: string[]) => void;
-  selectedEventCodes: string[];
   setSelectedEventCodes: (codes: string[]) => void;
 }
+
+
+
+
