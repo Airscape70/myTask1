@@ -5,16 +5,18 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
 import { Box } from "@mui/material";
-import { useFilterStore } from "../../store/store";
+import { useProjects } from "../../hooks/useProjects";
+import { useStore } from "../../store/store";
 
 
 
 export default function BasicMenu() {
-
-  const {projects, setSelectedProject } = useFilterStore()
+  const {projects, setSelectedProject} = useStore()
+  const {goToProject} = useProjects()
 
   const handleProjectClick = (project: IProject) => {
     setSelectedProject(project);
+    goToProject(project)
   };
 
   return (

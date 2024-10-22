@@ -2,58 +2,52 @@ import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import { Box } from "@mui/material";
-import { useContext } from "react";
 import { IWell } from "../../interfaces/IWell";
 import { EVENTS_CODES } from "../../constants/constants";
-import { DataContext } from "../../providers/DataProvider";
 import { StyledToggleButton } from "../styles";
+import { useStore } from "../../store/store";
 
 export default function WellCardActions(well: IWell) {
-  const {
-    selectedEventCodes,
-    setSelectedEventCodes,
-    selectedWell,
-    setSelectedWell,
-    setSelectedPlan,
-  } = useContext(DataContext);
+  const selectedWell = useStore((state) => state.selectedWell);
+  const setSelectedWell = useStore((state) => state.setSelectedWell);
+  const eventCodes = useStore((state) => state.eventCodes);
+  const addEventCode = useStore((state) => state.addEventCode);
+  const removeEventCode = useStore((state) => state.removeEventCode);
+  const clearEventsCode = useStore((state) => state.clearEventCodes);
+  const addPlan = useStore((state) => state.addPlan);
+  const clearPlan = useStore((state) => state.clearPlan);
 
   const isToogleSelected = (code: string) =>
-    selectedWell?.wellId === well.wellId && selectedEventCodes.includes(code);
+    selectedWell?.wellId === well.wellId && eventCodes?.includes(code);
 
   const handleFilterChange = (code: string) => {
     const selected = isToogleSelected(code);
 
     if (selectedWell?.wellId !== well.wellId) {
-      setSelectedEventCodes([code]);
+      clearEventsCode();
     } else {
-      setSelectedEventCodes(
-        selected
-          ? selectedEventCodes.filter((c) => c !== code)
-          : [...selectedEventCodes, code]
-      );
+      selected ? removeEventCode(code) : addEventCode(code);
     }
-
     setSelectedWell(well);
-    setSelectedPlan([]);
   };
-
   const handlePlanChange = (plan: string) => {
     if (selectedWell?.wellId === well.wellId) {
-      setSelectedPlan([plan]);
+      addPlan(plan);
     } else {
       setSelectedWell(well);
-      setSelectedPlan([plan]);
+      addPlan(plan);
     }
   };
+
   const handleFilterReset = (well: IWell) => {
     setSelectedWell(well);
-    setSelectedPlan([]);
-    setSelectedEventCodes([]);
+    clearPlan();
+    clearEventsCode();
   };
 
   return (
     <Box sx={{ justifyContent: "flex-end" }}>
-      <CardActions sx={{ height: "60px", pl: "16px"}}>
+      <CardActions sx={{ height: "60px", pl: "16px" }}>
         {EVENTS_CODES.map((code) => (
           <StyledToggleButton
             key={code}

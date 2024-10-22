@@ -1,55 +1,75 @@
 import { create } from "zustand";
 import { IProject } from "../interfaces/IProject";
 import { IWell } from "../interfaces/IWell";
-import { useProjects } from "../hooks/useProjects";
+import { ISite } from "../interfaces/ISites";
+import { IEvent } from "./../interfaces/IEvent";
+import { IReport } from "../interfaces/IReport";
 
-
-interface IFilterStore {
+interface IStore {
   projects: IProject[];
+  setProjects: (projects?: IProject[]) => void;
   selectedProject?: IProject;
-  setSelectedProject: (project: IProject) => void;
+  setSelectedProject: (project?: IProject) => void;
+
+  sites: ISite[];
+  setSites: (site?: ISite[]) => void;
+  wells: IWell[];
+  setWells: (wells?: IWell[]) => void;
   selectedWell?: IWell;
-  setSelectedWell: (well: IWell) => void;
-  selectedEventCodes: string[];
-  setSelectedEventCodes: (code: string[]) => void;
-  removeSelectedEventCodes: () => void;
-  selectedPlan: string[];
-  setSelectedPlan: (plan: string) => void;
-  removeSelectedPlan: () => void;
+  setSelectedWell: (well?: IWell) => void;
+
+  events: IEvent[];
+  setEvents: (event?: IEvent[]) => void;
+  selectedEventCode?: string[];
+  setSelectedEventCode: (code: string[]) => void;
+
+  report: IReport[];
+  setReport: (report?: IReport[]) => void;
+
+  eventCodes: string[];
+  addEventCode: (code: string) => void;
+  removeEventCode: (code: string) => void;
+  clearEventCodes: () => void;
+
+  plan: string[];
+  addPlan: (code: string) => void;
+  clearPlan: () => void;
+
+  filterType: string;
+  addFilterType: (alias: string) => void;
+  clearFilterType: () => void;
 }
 
+export const useStore = create<IStore>((set, get) => ({
+  projects: [],
+  setProjects: (data) => set({ projects: data }),
+  setSelectedProject: (project) => set({ selectedProject: project }),
 
-export const useFilterStore = create<IFilterStore>((set) => ({
-  projects: useProjects(),
-  selectedProject: undefined,
-  setSelectedProject: (project) =>
-    set((state) => ({
-      selectedProject: project,
-    })),
+  sites: [],
+  setSites: (data) => set({ sites: data }),
+  wells: [],
+  setWells: (data) => set({ wells: data }),
+  setSelectedWell: (well) => set({ selectedWell: well }),
 
-  selectedWell: undefined,
-  setSelectedWell: (well: IWell) =>
-    set((state) => ({
-      selectedWell: well,
-    })),
+  events: [],
+  setEvents: (data) => set({ events: data }),
+  selectedEventCode: [],
+  setSelectedEventCode: (code) => set({ selectedEventCode: code }),
 
-  selectedEventCodes: [],
-  setSelectedEventCodes: ([code]) =>
-    set((state) => ({
-      selectedEventCodes: [...state.selectedEventCodes, code],
-    })),
-  removeSelectedEventCodes: () =>
-    set((state) => ({
-      selectedEventCodes: [],
-    })),
+  report: [],
+  setReport: (data) => set({ report: data }),
 
-  selectedPlan: [],
-  setSelectedPlan: (plan) =>
-    set((state) => ({
-      selectedPlan: [...state.selectedPlan, plan],
-    })),
-  removeSelectedPlan: () =>
-    set((state) => ({
-      selectedPlan: [],
-    })),
+  eventCodes: [],
+  addEventCode: (code) => set({ eventCodes: [...get().eventCodes, code] }),
+  removeEventCode: (code) => set({ eventCodes: [...get().eventCodes.filter((c) => c !== code)] }),
+  clearEventCodes: () => set({ eventCodes: [] }),
+
+  plan: [],
+  addPlan: (plan) => set({ plan: [...get().eventCodes, plan] }),
+  clearPlan: () => set({ plan: [] }),
+
+  filterType: '',
+  addFilterType: (alias) => set({ filterType:  alias }),
+  clearFilterType: () => set({ filterType: '' }),
 }));
+
