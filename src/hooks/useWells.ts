@@ -4,18 +4,23 @@ import { getWells } from "../api/api";
 import { useNavigate, useParams } from "react-router-dom";
 import { useStore } from "../store/store";
 import { useCallback } from "react";
+import { useShallow } from "zustand/react/shallow";
 
 export function useWells() {
   const { wellId } = useParams();
   const navigate = useNavigate();
-  const setWells = useStore((state) => state.setWells);
-  const setSelectedWell = useStore((state) => state.setSelectedWell);
-  const selectedProject = useStore((state) => state.selectedProject);
-  const sites = useStore((state) => state.sites);
+
+  const { setWells, setSelectedWell, selectedProject, sites } = useStore(
+    useShallow((state) => ({
+      setWells: state.setWells,
+      setSelectedWell: state.setSelectedWell,
+      selectedProject: state.selectedProject,
+      sites: state.sites,
+    }))
+  );
 
   const { refetch: fetchWellsData } = useQuery<IWell[]>(
-    ["wells"],
-    () => {
+    ["wells"], () => {
       const siteIds: string = sites.map((el) => el.siteId).join(",");
       return getWells(siteIds);
     },
@@ -37,12 +42,10 @@ export function useWells() {
     setSelectedWell(currentWell ?? data?.[0]);
   }, [setWells, setSelectedWell, fetchWellsData, wellId]);
 
-  const goToWell = useCallback(
-    (well: IWell) => {
+  const goToWell = useCallback((well: IWell) => {
       selectedProject &&
         navigate(`/projects/${selectedProject.projectId}/wells/${well.wellId}`);
-    },
-    [navigate, selectedProject]
+    }, [navigate, selectedProject]
   );
 
   return { loadWells, goToWell };

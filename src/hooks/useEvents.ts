@@ -3,10 +3,15 @@ import { getEvents } from "../api/api";
 import { IEvent } from "../interfaces/IEvent";
 import { useStore } from "../store/store";
 import { useCallback } from "react";
+import { useShallow } from "zustand/react/shallow";
 
 export function useEvents() {
-  const setEvents = useStore((state) => state.setEvents);
-  const selectedWell = useStore((state) => state.selectedWell);
+  const { setEvents, selectedWell } = useStore(
+    useShallow((state) => ({
+      setEvents: state.setEvents,
+      selectedWell: state.selectedWell,
+    }))
+  );
 
   const { refetch: fetchEvents } = useQuery<IEvent[]>(
     ["eventId", selectedWell],

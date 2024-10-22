@@ -1,13 +1,17 @@
 import { getSites } from "../api/api";
 import { useQuery } from "react-query";
 import { ISite } from "../interfaces/ISites";
-import { IProject } from "../interfaces/IProject";
 import { useStore } from "../store/store";
 import { useCallback } from "react";
+import { useShallow } from "zustand/react/shallow";
 
 export function useSites() {
-  const setSites = useStore((state) => state.setSites);
-  const selectedProject = useStore((state) => state.selectedProject);
+  const { setSites, selectedProject } = useStore(
+    useShallow((state) => ({
+      setSites: state.setSites,
+      selectedProject: state.selectedProject,
+    }))
+  );
 
   const { refetch: fetchSitesData } = useQuery<ISite[]>(
     ["sites", selectedProject?.projectId],
@@ -18,8 +22,6 @@ export function useSites() {
       keepPreviousData: true,
     }
   );
-
-
 
   const loadSites = useCallback(async () => {
     const { data } = await fetchSitesData();

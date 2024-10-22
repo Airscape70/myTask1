@@ -65,7 +65,6 @@ export const StyledCardBox = styled("div")(({ theme }) => ({
 
 export const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
   borderRadius: "50px",
-  px: "20px",
-  py: "5px",
+  padding: "5px 20px",
   fontWeight: 500,
 }));

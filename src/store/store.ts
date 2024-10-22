@@ -1,44 +1,5 @@
 import { create } from "zustand";
-import { IProject } from "../interfaces/IProject";
-import { IWell } from "../interfaces/IWell";
-import { ISite } from "../interfaces/ISites";
-import { IEvent } from "./../interfaces/IEvent";
-import { IReport } from "../interfaces/IReport";
-
-interface IStore {
-  projects: IProject[];
-  setProjects: (projects?: IProject[]) => void;
-  selectedProject?: IProject;
-  setSelectedProject: (project?: IProject) => void;
-
-  sites: ISite[];
-  setSites: (site?: ISite[]) => void;
-  wells: IWell[];
-  setWells: (wells?: IWell[]) => void;
-  selectedWell?: IWell;
-  setSelectedWell: (well?: IWell) => void;
-
-  events: IEvent[];
-  setEvents: (event?: IEvent[]) => void;
-  selectedEventCode?: string[];
-  setSelectedEventCode: (code: string[]) => void;
-
-  report: IReport[];
-  setReport: (report?: IReport[]) => void;
-
-  eventCodes: string[];
-  addEventCode: (code: string) => void;
-  removeEventCode: (code: string) => void;
-  clearEventCodes: () => void;
-
-  plan: string[];
-  addPlan: (code: string) => void;
-  clearPlan: () => void;
-
-  filterType: string;
-  addFilterType: (alias: string) => void;
-  clearFilterType: () => void;
-}
+import { IStore } from "../interfaces/IStore";
 
 export const useStore = create<IStore>((set, get) => ({
   projects: [],

@@ -6,13 +6,15 @@ import { reportsTypeFilters } from "../../constants/constants";
 import { useStore } from "../../store/store";
 
 export default function Report() {
-  const report  = useStore(state => state.report);
-  const plan = useStore(state => state.plan);
-  const filterType = useStore(state => state.filterType);
-  const addFilterType = useStore(state => state.addFilterType);
-  const clearFilterType = useStore(state => state.clearFilterType);
+  const report = useStore((state) => state.report);
+  const plan = useStore((state) => state.plan);
+  const filterType = useStore((state) => state.filterType);
+  const addFilterType = useStore((state) => state.addFilterType);
+  const clearFilterType = useStore((state) => state.clearFilterType);
 
-  const [filteredReport, setFilteredReport] = useState<IReport[] | undefined>([]);
+  const [filteredReport, setFilteredReport] = useState<IReport[] | undefined>(
+    []
+  );
 
   const columns = useMemo(
     () => [
@@ -25,18 +27,16 @@ export default function Report() {
     []
   );
 
-  const reportFilteredPlan = report?.filter(
-    (el) => el.reportAlias === plan[0]
-  );
+  const reportFilteredPlan = report?.filter((el) => el.reportAlias === plan[0]);
 
   const handleOnClickFilter = (alias: string) => {
-    addFilterType(alias)
+    addFilterType(alias);
     setFilteredReport(report?.filter((rep) => rep.reportAlias === alias));
   };
 
   const handleDeleteTypeFilter = () => {
     setFilteredReport(report);
-    clearFilterType()
+    clearFilterType();
   };
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export default function Report() {
               onDelete={() => handleDeleteTypeFilter()}
               size="small"
               autoCorrect="true"
-              color={filterType === filter.alias ? 'primary' : 'default' }
+              color={filterType === filter.alias ? "primary" : "default"}
             />
           ))}
         </Stack>

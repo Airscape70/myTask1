@@ -9,7 +9,13 @@ import { useShallow } from "zustand/react/shallow";
 export function useProjects() {
   const { projectId } = useParams();
   const navigate = useNavigate();
-
+  const { setSelectedProject, setProjects } = useStore(
+    useShallow((state) => ({
+      setSelectedProject: state.setSelectedProject,
+      setProjects: state.setProjects,
+    }))
+  );
+  
   const { refetch: fetchProjects } = useQuery<IProject[] | undefined>(
     "projects",
     getProjects,
@@ -20,13 +26,6 @@ export function useProjects() {
     }
   );
 
-  const { setSelectedProject, setProjects } = useStore(
-    useShallow((state) => ({
-      setSelectedProject: state.setSelectedProject,
-      setProjects: state.setProjects,
-    }))
-  );
-  // const setProjects = useStore((state) => state.setProjects);
 
   const loadProjects = useCallback(async () => {
     const { data } = await fetchProjects();

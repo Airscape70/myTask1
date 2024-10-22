@@ -4,14 +4,17 @@ import { IReport } from "../interfaces/IReport";
 import { default as dayjs } from "dayjs";
 import { useStore } from "../store/store";
 import { useCallback } from "react";
+import { useShallow } from "zustand/react/shallow";
 
 export function useReport() {
-  const setReport = useStore((state) => state.setReport);
-  const selectedWell = useStore((state) => state.selectedWell);
-  const eventCodes = useStore((state) => state.eventCodes);
-  const events = useStore((state) => state.events);
-  const plan = useStore((state) => state.plan);
-
+  const { setReport, selectedWell, eventCodes, events } = useStore(
+    useShallow((state) => ({
+      setReport: state.setReport,
+      selectedWell: state.selectedWell,
+      eventCodes: state.eventCodes,
+      events: state.events,
+    }))
+  );
 
   const { refetch: fetchReportData } = useQuery<IReport[]>(
     ["reportId", selectedWell?.wellId],
