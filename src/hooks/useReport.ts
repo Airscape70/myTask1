@@ -1,21 +1,22 @@
 import { useQuery } from "react-query";
-import { IWell } from "../interfaces/IWell";
 import { getReport } from "../api/api";
 import { IReport } from "../interfaces/IReport";
-import { useEffect } from "react";
-import { IEvent } from "../interfaces/IEvent";
 import { default as dayjs } from "dayjs";
+import { useStore } from "../store/store";
+import { useCallback } from "react";
 
-export function useReport(
-  well?: IWell,
-  eventCodeFilter?: string[],
-  events?: IEvent[]
-) {
-  const { data: reportData = [], refetch: fetchReportData } = useQuery<
-    IReport[]
-  >(
-    ["reportId", well?.wellId],
-    async () => well && getReport(well.wellId, events, eventCodeFilter),
+export function useReport() {
+  const setReport = useStore((state) => state.setReport);
+  const selectedWell = useStore((state) => state.selectedWell);
+  const eventCodes = useStore((state) => state.eventCodes);
+  const events = useStore((state) => state.events);
+  const plan = useStore((state) => state.plan);
+
+
+  const { refetch: fetchReportData } = useQuery<IReport[]>(
+    ["reportId", selectedWell?.wellId],
+    async () =>
+      selectedWell && getReport(selectedWell.wellId, events, eventCodes),
     {
       enabled: false,
       refetchOnWindowFocus: false,
@@ -23,17 +24,18 @@ export function useReport(
     }
   );
 
-for (let rep of reportData) {
-  rep.dateReport = dayjs(rep.dateReport).format('DD.MM.YYYY')
-  rep.reportNo = Number(rep.reportNo)
-}
+  const loadReport = useCallback(async () => {
+    const { data } = await fetchReportData();
+    if (data) {
+      for (let rep of data) {
+        rep.dateReport = dayjs(rep.dateReport).format("DD.MM.YYYY");
+        rep.reportNo = Number(rep.reportNo);
+      }
+    }
+    data?.sort((a: any, b: any) => a.dateReport - b.dateReport);
 
-  reportData.sort((a:any, b:any) => a.dateReport - b.dateReport)
+    setReport(data);
+  }, [setReport, fetchReportData, eventCodes]);
 
-  useEffect(() => {
-    if (!well) return;
-    fetchReportData();
-  }, [well, fetchReportData]);
-
-  return reportData;
+  return { loadReport };
 }

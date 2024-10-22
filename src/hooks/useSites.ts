@@ -1,24 +1,30 @@
-import { useEffect } from "react";
 import { getSites } from "../api/api";
 import { useQuery } from "react-query";
 import { ISite } from "../interfaces/ISites";
 import { IProject } from "../interfaces/IProject";
+import { useStore } from "../store/store";
+import { useCallback } from "react";
 
-export function useSites(project?: IProject) {
-  const { data: sitesData = [], refetch: fetchSitesData } = useQuery<ISite[]>(
-    ["sites", project?.projectId],
-    async () => project && getSites(project.projectId),
+export function useSites() {
+  const setSites = useStore((state) => state.setSites);
+  const selectedProject = useStore((state) => state.selectedProject);
+
+  const { refetch: fetchSitesData } = useQuery<ISite[]>(
+    ["sites", selectedProject?.projectId],
+    async () => selectedProject && getSites(selectedProject.projectId),
     {
       enabled: false,
       refetchOnWindowFocus: false,
-      keepPreviousData: true
+      keepPreviousData: true,
     }
   );
 
-  useEffect(() => {
-    if (!project?.projectId) return;
-    fetchSitesData();
-  }, [project?.projectId, fetchSitesData]);
 
-  return sitesData;
+
+  const loadSites = useCallback(async () => {
+    const { data } = await fetchSitesData();
+    setSites(data);
+  }, [setSites, fetchSitesData]);
+
+  return { loadSites };
 }

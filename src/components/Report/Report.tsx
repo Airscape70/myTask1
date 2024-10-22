@@ -1,14 +1,18 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MaterialReactTable } from "material-react-table";
 import { IReport } from "../../interfaces/IReport";
 import { Box, Chip, Stack, Typography } from "@mui/material";
 import { reportsTypeFilters } from "../../constants/constants";
-import { DataContext } from "../../providers/DataProvider";
+import { useStore } from "../../store/store";
 
 export default function Report() {
-  const { report, selectedPlan } = useContext(DataContext);
+  const report  = useStore(state => state.report);
+  const plan = useStore(state => state.plan);
+  const filterType = useStore(state => state.filterType);
+  const addFilterType = useStore(state => state.addFilterType);
+  const clearFilterType = useStore(state => state.clearFilterType);
+
   const [filteredReport, setFilteredReport] = useState<IReport[] | undefined>([]);
-  const [selectedType, setSelectedType] = useState<string>('');
 
   const columns = useMemo(
     () => [
@@ -22,20 +26,18 @@ export default function Report() {
   );
 
   const reportFilteredPlan = report?.filter(
-    (el) => el.reportAlias === selectedPlan[0]
+    (el) => el.reportAlias === plan[0]
   );
 
   const handleOnClickFilter = (alias: string) => {
-    setSelectedType(alias)
+    addFilterType(alias)
     setFilteredReport(report?.filter((rep) => rep.reportAlias === alias));
   };
 
   const handleDeleteTypeFilter = () => {
     setFilteredReport(report);
-    setSelectedType('')
+    clearFilterType()
   };
-
-
 
   useEffect(() => {
     setFilteredReport(report);
@@ -56,14 +58,14 @@ export default function Report() {
               onDelete={() => handleDeleteTypeFilter()}
               size="small"
               autoCorrect="true"
-              color={selectedType === filter.alias ? 'primary' : 'default' }
+              color={filterType === filter.alias ? 'primary' : 'default' }
             />
           ))}
         </Stack>
       </Box>
       <MaterialReactTable
         columns={columns}
-        data={selectedPlan.length > 0 ? reportFilteredPlan! : filteredReport!}
+        data={plan.length > 0 ? reportFilteredPlan : filteredReport!}
         enablePagination={true}
         enableSorting={true}
         enableColumnFilters={false}

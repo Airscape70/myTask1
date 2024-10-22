@@ -4,12 +4,13 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import Grid from "@mui/material/Grid2";
-import Carousel from "./Carousel";
-import { useContext } from "react";
-import { DataContext } from "../../providers/DataProvider";
+import {  useStore } from "../../store/store";
 
 export default function Wells() {
-  const { selectedProject, wells } = useContext(DataContext);
+  const wells = useStore(state => state.wells)
+  const selectedProject = useStore(state => state.selectedProject)
+
+  
   return (
     <>
       <Grid container mb={5}>
@@ -23,7 +24,6 @@ export default function Wells() {
               <WellCard key={el.wellId} {...el} />
             ))}
           </Box>
-          {/* <Carousel /> */}
         </Grid>
 
         <Grid size={2}>

@@ -10,12 +10,4 @@ export interface DataContextValue {
   report?: IReport[];
   currentProject: (project: IProject) => void;
   currentWell: (well: IWell) => void;
-  selectedProject?: IProject;
-  setSelectedProject: (project: IProject) => void;
-  selectedWell?: IWell;
-  setSelectedWell: (well: IWell) => void;
-  selectedPlan: string[];
-  setSelectedPlan: (plan: string[]) => void;
-  selectedEventCodes: string[];
-  setSelectedEventCodes: (codes: string[]) => void;
 }

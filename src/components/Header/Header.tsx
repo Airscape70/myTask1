@@ -12,7 +12,6 @@ import {
 import { NAV_ITEMS } from "../../constants/constants";
 
 export default function Header() {
-
   return (
     <AppBar position="static">
       <Toolbar>
