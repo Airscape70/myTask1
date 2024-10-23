@@ -1,23 +1,20 @@
 import { getSites } from "../api/api";
 import { useQuery } from "react-query";
 import { ISite } from "../interfaces/ISites";
-import { useStore } from "../store/store";
+import { useStoreProjects, useStoreWells } from "../store/store";
 import { useCallback } from "react";
-import { useShallow } from "zustand/react/shallow";
+
 
 export function useSites() {
-  const { setSites, selectedProject } = useStore(
-    useShallow((state) => ({
-      setSites: state.setSites,
-      selectedProject: state.selectedProject,
-    }))
-  );
+  const setSites = useStoreWells(state => state.setSites)
+  const selectedProject = useStoreProjects(state => state.selectedProject)
 
   const { refetch: fetchSitesData } = useQuery<ISite[]>(
     ["sites", selectedProject?.projectId],
     async () => selectedProject && getSites(selectedProject.projectId),
     {
       enabled: false,
+      staleTime: 1000 * 60 * 1000,
       refetchOnWindowFocus: false,
       keepPreviousData: true,
     }

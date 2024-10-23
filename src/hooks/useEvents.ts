@@ -1,23 +1,18 @@
 import { useQuery } from "react-query";
 import { getEvents } from "../api/api";
 import { IEvent } from "../interfaces/IEvent";
-import { useStore } from "../store/store";
+import { useStoreEvents, useStoreWells } from "../store/store";
 import { useCallback } from "react";
-import { useShallow } from "zustand/react/shallow";
 
 export function useEvents() {
-  const { setEvents, selectedWell } = useStore(
-    useShallow((state) => ({
-      setEvents: state.setEvents,
-      selectedWell: state.selectedWell,
-    }))
-  );
+  const setEvents = useStoreEvents(state => state.setEvents)
+  const selectedWell = useStoreWells(state => state.selectedWell)
 
   const { refetch: fetchEvents } = useQuery<IEvent[]>(
     ["eventId", selectedWell],
     async () => selectedWell && getEvents(selectedWell.wellId),
     {
-      enabled: false,
+      staleTime: 1000 * 60 * 1000,
       refetchOnWindowFocus: false,
       keepPreviousData: true,
     }

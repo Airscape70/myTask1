@@ -4,11 +4,11 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import Grid from "@mui/material/Grid2";
-import {  useStore } from "../../store/store";
+import { useStoreProjects, useStoreWells } from "../../store/store";
 
 export default function Wells() {
-  const wells = useStore(state => state.wells)
-  const selectedProject = useStore(state => state.selectedProject)
+  const wells = useStoreWells(state => state.wells)
+  const selectedProject = useStoreProjects(state => state.selectedProject)
 
   
   return (

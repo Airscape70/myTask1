@@ -6,22 +6,27 @@ import Menu from "@mui/material/Menu";
 import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
 import { Box } from "@mui/material";
 import { useProjects } from "../../hooks/useProjects";
-import { useStore } from "../../store/store";
-
-
+import { useStoreProjects } from "../../store/store";
+import { useShallow } from "zustand/react/shallow";
 
 export default function BasicMenu() {
-  const {projects, setSelectedProject} = useStore()
-  const {goToProject} = useProjects()
+  const { projects, setSelectedProject } = useStoreProjects(
+    useShallow((state) => ({
+      projects: state.projects,
+      setSelectedProject: state.setSelectedProject,
+    }))
+  );
+
+  const { goToProject } = useProjects();
 
   const handleProjectClick = (project: IProject) => {
     setSelectedProject(project);
-    goToProject(project)
+    goToProject(project);
   };
 
   return (
     <Box sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}>
-      <PopupState  variant="popover" popupId="demo-popup-menu">
+      <PopupState variant="popover" popupId="demo-popup-menu">
         {(popupState) => (
           <React.Fragment>
             <Button variant="contained" {...bindTrigger(popupState)}>

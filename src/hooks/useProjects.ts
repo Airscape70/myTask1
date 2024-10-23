@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import { getProjects } from "../api/api";
 import { IProject } from "../interfaces/IProject";
-import { useStore } from "../store/store";
+import { useStoreProjects } from "../store/store";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCallback } from "react";
 import { useShallow } from "zustand/react/shallow";
@@ -9,7 +9,7 @@ import { useShallow } from "zustand/react/shallow";
 export function useProjects() {
   const { projectId } = useParams();
   const navigate = useNavigate();
-  const { setSelectedProject, setProjects } = useStore(
+  const { setSelectedProject, setProjects } = useStoreProjects(
     useShallow((state) => ({
       setSelectedProject: state.setSelectedProject,
       setProjects: state.setProjects,
@@ -21,6 +21,7 @@ export function useProjects() {
     getProjects,
     {
       enabled: false,
+      staleTime: 1000 * 60 * 1000,
       refetchOnWindowFocus: false,
       keepPreviousData: true,
     }
@@ -37,12 +38,9 @@ export function useProjects() {
     setSelectedProject(currentProject ?? data?.[0]);
   }, [setProjects, setSelectedProject, projectId, fetchProjects]);
 
-  const goToProject = useCallback(
-    (project: IProject) => {
+  const goToProject = useCallback((project: IProject) => {
       navigate(`/projects/${project.projectId}`);
-    },
-    [navigate]
-  );
+    }, [navigate]);
 
   return {
     loadProjects,

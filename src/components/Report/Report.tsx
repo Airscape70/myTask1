@@ -3,18 +3,21 @@ import { MaterialReactTable } from "material-react-table";
 import { IReport } from "../../interfaces/IReport";
 import { Box, Chip, Stack, Typography } from "@mui/material";
 import { reportsTypeFilters } from "../../constants/constants";
-import { useStore } from "../../store/store";
+import { useStoreFilters, useStoreReport } from "../../store/store";
+import { useShallow } from "zustand/react/shallow";
 
 export default function Report() {
-  const report = useStore((state) => state.report);
-  const plan = useStore((state) => state.plan);
-  const filterType = useStore((state) => state.filterType);
-  const addFilterType = useStore((state) => state.addFilterType);
-  const clearFilterType = useStore((state) => state.clearFilterType);
-
-  const [filteredReport, setFilteredReport] = useState<IReport[] | undefined>(
-    []
+  const report = useStoreReport((state) => state.report);
+  const { plan, filterType, addFilterType, clearFilterType } = useStoreFilters(
+    useShallow((state) => ({
+      plan: state.plan,
+      filterType: state.filterType,
+      addFilterType: state.addFilterType,
+      clearFilterType: state.clearFilterType,
+    }))
   );
+
+  const [filteredReport, setFilteredReport] = useState<IReport[] | undefined>([]);
 
   const columns = useMemo(
     () => [

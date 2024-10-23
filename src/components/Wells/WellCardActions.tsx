@@ -5,17 +5,34 @@ import { Box } from "@mui/material";
 import { IWell } from "../../interfaces/IWell";
 import { EVENTS_CODES } from "../../constants/constants";
 import { StyledToggleButton } from "../styles";
-import { useStore } from "../../store/store";
+import { useStoreFilters, useStoreWells } from "../../store/store";
+import { useShallow } from "zustand/react/shallow";
 
 export default function WellCardActions(well: IWell) {
-  const selectedWell = useStore((state) => state.selectedWell);
-  const setSelectedWell = useStore((state) => state.setSelectedWell);
-  const eventCodes = useStore((state) => state.eventCodes);
-  const addEventCode = useStore((state) => state.addEventCode);
-  const removeEventCode = useStore((state) => state.removeEventCode);
-  const clearEventsCode = useStore((state) => state.clearEventCodes);
-  const addPlan = useStore((state) => state.addPlan);
-  const clearPlan = useStore((state) => state.clearPlan);
+  const { selectedWell, setSelectedWell } = useStoreWells(
+    useShallow((state) => ({
+      selectedWell: state.selectedWell,
+      setSelectedWell: state.setSelectedWell,
+    }))
+  );
+
+  const {
+    eventCodes,
+    addEventCode,
+    removeEventCode,
+    clearEventsCode,
+    addPlan,
+    clearPlan,
+  } = useStoreFilters(
+    useShallow((state) => ({
+      eventCodes: state.eventCodes,
+      addEventCode: state.addEventCode,
+      removeEventCode: state.removeEventCode,
+      clearEventsCode: state.clearEventCodes,
+      addPlan: state.addPlan,
+      clearPlan: state.clearPlan,
+    }))
+  );
 
   const isToogleSelected = (code: string) =>
     selectedWell?.wellId === well.wellId && eventCodes?.includes(code);
