@@ -44,6 +44,7 @@ export default function Report() {
 
   useEffect(() => {
     setFilteredReport(report);
+    handleDeleteTypeFilter()
   }, [report]);
 
   return (

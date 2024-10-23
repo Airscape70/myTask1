@@ -47,6 +47,7 @@ export default function WellCardActions(well: IWell) {
     }
     setSelectedWell(well);
   };
+  
   const handlePlanChange = (plan: string) => {
     if (selectedWell?.wellId === well.wellId) {
       addPlan(plan);
